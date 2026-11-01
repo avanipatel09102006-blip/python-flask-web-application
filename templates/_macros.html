@@ -1,0 +1,21 @@
+{% macro card(p) %}
+<article class="card post-card">
+  <h2><a href="{{ url_for('posts.detail', post_id=p.id) }}">{{ p.title }}</a></h2>
+  <p class="excerpt">{{ p.body|truncate(160) }}</p>
+  <div class="meta">
+    <a class="author" href="{{ url_for('posts.profile', username=p.username) }}"><span class="av">{{ p.username[0]|upper }}</span>{{ p.username }}</a>
+    <span>{{ p.created_at|fmt }}</span><span>{{ p.body|readtime }} min read</span>
+    <span>{{ p.n_comments }} comment{{ '' if p.n_comments == 1 else 's' }}</span>
+  </div>
+</article>
+{% endmacro %}
+
+{% macro pager(page, pages) %}
+{% if pages > 1 %}
+<nav class="pager" aria-label="Pagination">
+  {% if page > 1 %}<a class="btn ghost" href="{{ url_for(request.endpoint, page=page-1, q=request.args.get('q'), **request.view_args) }}">Previous</a>{% endif %}
+  <span>Page {{ page }} of {{ pages }}</span>
+  {% if page < pages %}<a class="btn ghost" href="{{ url_for(request.endpoint, page=page+1, q=request.args.get('q'), **request.view_args) }}">Next</a>{% endif %}
+</nav>
+{% endif %}
+{% endmacro %}
