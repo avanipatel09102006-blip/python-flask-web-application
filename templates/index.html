@@ -1,0 +1,13 @@
+{% extends "base.html" %}{% from "_macros.html" import card, pager %}
+{% block content %}
+<section class="hero">
+  <h1>Stories and notes</h1>
+  <form class="search" method="get" action="{{ url_for('posts.index') }}">
+    <input name="q" value="{{ q }}" placeholder="Search posts" aria-label="Search posts">
+    <button class="btn primary">Search</button>
+  </form>
+</section>
+{% if q %}<p class="muted">{{ total }} result{{ '' if total == 1 else 's' }} for "{{ q }}" · <a href="{{ url_for('posts.index') }}">clear</a></p>{% endif %}
+<div class="list">{% for p in posts %}{{ card(p) }}{% else %}<p class="empty">No posts found. {% if g.user %}<a href="{{ url_for('posts.create') }}">Write the first one</a>.{% endif %}</p>{% endfor %}</div>
+{{ pager(page, pages) }}
+{% endblock %}
