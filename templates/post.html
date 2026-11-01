@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}{{ post.title }} · Blogly{% endblock %}
+{% block content %}
+<article class="card article">
+  <h1>{{ post.title }}</h1>
+  <div class="meta">
+    <a class="author" href="{{ url_for('posts.profile', username=post.username) }}"><span class="av">{{ post.username[0]|upper }}</span>{{ post.username }}</a>
+    <span>{{ post.created_at|fmt }}</span><span>{{ post.body|readtime }} min read</span>
+    {% if post.updated_at != post.created_at %}<span>edited {{ post.updated_at|fmt }}</span>{% endif %}
+  </div>
+  <div class="body">{{ post.body }}</div>
+  {% if g.user and g.user.id == post.author_id %}
+  <div class="row">
+    <a class="btn ghost" href="{{ url_for('posts.edit', post_id=post.id) }}">Edit</a>
+    <form method="post" action="{{ url_for('posts.delete', post_id=post.id) }}" data-confirm="Delete this post and its comments?">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button class="btn danger">Delete</button></form>
+  </div>{% endif %}
+</article>
+
+<section id="comments" class="card">
+  <h2>{{ comments|length }} comment{{ '' if comments|length == 1 else 's' }}</h2>
+  {% for c in comments %}
+  <div class="comment">
+    <div class="meta"><a class="author" href="{{ url_for('posts.profile', username=c.username) }}"><span class="av">{{ c.username[0]|upper }}</span>{{ c.username }}</a><span>{{ c.created_at|fmt }}</span></div>
+    <p>{{ c.body }}</p>
+    {% if g.user and (g.user.id == c.author_id or g.user.id == post.author_id) %}
+    <form method="post" action="{{ url_for('posts.delete_comment', comment_id=c.id) }}" data-confirm="Remove this comment?">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button class="link small">Remove</button></form>{% endif %}
+  </div>
+  {% endfor %}
+  {% if g.user %}
+  <form method="post" action="{{ url_for('posts.comment', post_id=post.id) }}" class="stack">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <label>Add a comment<textarea name="body" rows="3" maxlength="500" required data-count></textarea></label>
+    <button class="btn primary">Post comment</button>
+  </form>
+  {% else %}<p class="muted"><a href="{{ url_for('auth.login', next=request.path) }}">Log in</a> to join the discussion.</p>{% endif %}
+</section>
+{% endblock %}
