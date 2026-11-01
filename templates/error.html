@@ -1,0 +1,2 @@
+{% extends "base.html" %}{% block title %}{{ code }} · Blogly{% endblock %}
+{% block content %}<section class="card narrow center"><h1>{{ code }}</h1><p>{{ message }}</p><a class="btn primary" href="{{ url_for('posts.index') }}">Back to home</a></section>{% endblock %}
