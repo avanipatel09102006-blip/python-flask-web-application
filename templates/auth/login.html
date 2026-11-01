@@ -1,0 +1,12 @@
+{% extends "base.html" %}{% block title %}Log in · Blogly{% endblock %}
+{% block content %}
+<section class="card narrow"><h1>Log in</h1>
+  <form method="post" class="stack">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <label>Username<input name="username" required autocomplete="username" value="{{ request.form.username or '' }}"></label>
+    <label>Password<input name="password" type="password" required autocomplete="current-password"></label>
+    <button class="btn primary">Log in</button>
+  </form>
+  <p class="muted">New here? <a href="{{ url_for('auth.register') }}">Create an account</a>. Demo: demo / demo123</p>
+</section>
+{% endblock %}
