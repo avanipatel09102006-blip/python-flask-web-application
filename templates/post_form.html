@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}{{ 'Edit post' if post else 'New post' }} · Blogly{% endblock %}
+{% block content %}
+<section class="card narrow">
+  <h1>{{ 'Edit post' if post else 'Write a post' }}</h1>
+  <form method="post" class="stack">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <label>Title<input name="title" maxlength="100" required value="{{ request.form.title or (post.title if post) or '' }}" data-count></label>
+    <label>Content<textarea name="body" rows="12" maxlength="5000" required data-count>{{ request.form.body or (post.body if post) or '' }}</textarea></label>
+    <div class="row"><a class="btn ghost" href="{{ url_for('posts.detail', post_id=post.id) if post else url_for('posts.index') }}">Cancel</a><button class="btn primary">{{ 'Save changes' if post else 'Publish' }}</button></div>
+  </form>
+</section>
+{% endblock %}
