@@ -1,0 +1,8 @@
+{% extends "base.html" %}{% from "_macros.html" import card, pager %}
+{% block title %}{{ profile.username }} · Blogly{% endblock %}
+{% block content %}
+<section class="hero left"><span class="av big">{{ profile.username[0]|upper }}</span>
+  <div><h1>{{ profile.username }}</h1><p class="muted">{{ total }} post{{ '' if total == 1 else 's' }} · joined {{ profile.created_at|fmt }}</p></div></section>
+<div class="list">{% for p in posts %}{{ card(p) }}{% else %}<p class="empty">No posts yet.</p>{% endfor %}</div>
+{{ pager(page, pages) }}
+{% endblock %}
